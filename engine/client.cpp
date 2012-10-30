@@ -7,6 +7,8 @@
 #include "Histogram.h"
 #include <vector>
 #include <algorithm>
+#include <locale>
+#include <string>
 
 using namespace std;
 
@@ -23,6 +25,8 @@ int main() {
     vector<string> files = vector<string>();
     getdir(dir,files); //Anade los files del directorio al vector
     tr1::unordered_map<string, Histogram> engine;
+    
+    locale filter;
     
     //Stopwords requirements
 	vector<string> stopWords;//Lista esta sorted, so binary search for the win.
@@ -50,7 +54,13 @@ int main() {
             
             for (int j = 0; j < words.size(); j++) {
                 //cout<<words[j]<<endl;
-                //Clean word.
+                
+                //Clean word
+                for (int k = 0; k < words[j].length(); k++) {
+                    if(!isalpha(words[j][k], filter)) {
+                        words[j].erase(k,1);
+                    }
+                }
 
                 //If the word is not in stopwords.txt, add it to the engine
                 if (!binary_search(stopWords.begin(), stopWords.end(), words[j])) {
