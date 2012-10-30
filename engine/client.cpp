@@ -32,6 +32,8 @@ int main() {
 	vector<string> stopWords;//Lista esta sorted, so binary search for the win.
     ifstream stopFile("../stopwords.txt");
     
+    
+    cout << "Building the stopwatch list."<<endl;
     do {
         string parse;
         stopFile >> parse;
@@ -39,11 +41,14 @@ int main() {
     } while (!stopFile.eof());
 
     stopFile.close();
+
+    cout << "Done building the stopwatch list."<<endl;
     
     //Montar el engine. Contiene un hash table para index las palabras.
     //El key es la palabra, el value es un Histograma que mantiene un LL y
     //un counter total. El LL mantiene un historial de libros con su titulo y
     //apariciones de la palabra.
+    cout <<endl<<"Start building the search engine."<<endl;
     for (int i = 0; i < files.size(); i++) {
         
         //cout<<files[i]<<endl<<endl;
@@ -58,22 +63,27 @@ int main() {
                 //Clean word
                 for (int k = 0; k < words[j].length(); k++) {
                     if(!isalpha(words[j][k], filter)) {
-                        words[j].erase(k,1);
+                        if(words[j][k] == '\'') words[j].erase(k);
+                        else words[j].erase(k,1);
                     }
                 }
 
                 //If the word is not in stopwords.txt, add it to the engine
                 if (!binary_search(stopWords.begin(), stopWords.end(), words[j])) {
                     //If found, increase counter
+                    
                     tr1::unordered_map<string, Histogram>::iterator mapIndex = engine.find(words[j]);
                     if (mapIndex != engine.end()) {
+                        
                         //If findAndAdd book doesn't work, add book.
                         if (!mapIndex->second.findAndAdd(files[i])) {
+                            
                             mapIndex->second.addBook(files[i]);
                         }
                     }
                     //If not found, add the word
                     else {
+                        
                         Histogram newHistogram(files[i]);
                         engine[words[j]] = newHistogram;
                     }
@@ -81,6 +91,17 @@ int main() {
             }
         }
     }
+    cout<<"Done building search engine."<<endl;
+    //Empieza el I/O con el usuario.
+    
+    cout<<endl<<"Submit your words bro"<<endl;
+    string parse;
+    cin >> parse;
+    while (parse != "") {
+
+        cin >> parse;
+    }
+    
     
         
 }
