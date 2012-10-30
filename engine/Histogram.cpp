@@ -27,7 +27,7 @@ int Histogram::getTotalRepetitions() const {
 
 void Histogram::addBook(const string& book) {
     Book newBook(book);
-    books.push_back(newBook); //check this
+    books.push_back(newBook);
     totalRepetitions++;
 }
 
