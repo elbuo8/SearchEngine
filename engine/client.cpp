@@ -8,6 +8,8 @@
 #include <locale>
 #include <string>
 #include <regex.h>
+#include <list>
+#include "Book.h"
 
 using namespace std;
 
@@ -79,8 +81,6 @@ int main() {
                     }
                     //If not found, add the word
                     else {
-
-                        //Histogram newHistogram(files[i]);
                         engine[words[j]] = Histogram(files[i]);
                     }
                 }
@@ -88,19 +88,33 @@ int main() {
         }
     }
     cout<<"Done building search engine."<<endl;
-
-
-    //Empieza el I/O con el usuario.
     
+    //Empieza el I/O con el usuario.
     
     cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
     string parse;
-    cin >> parse;
+    getline(cin, parse);
     while (parse != "0") {
-		
-
+        vector<string> words = tokenize(parse, " "); //Recycle bro.
+		if(words.size() == 0 || words.size() > 2) {
+            cout<<"Invalid parameters. Just 1 or 2 words only."<<endl;            
+        }
+        else {
+            if (words.size() == 2) {
+				if(engine.find(words[0]) != engine.end() && engine.find(words[1]) != engine.end() && words[0] != words[1]) {
+                    list<Book> intersection = getIntersection(engine[words[0]].getHistogram(), engine[words[1]].getHistogram());
+                    intersection.sort(bookSort);
+                    
+					for (list<Book>::iterator bookIndex = intersection.begin(); bookIndex != intersection.end(); bookIndex++) {
+                        cout<<bookIndex->getTitle()<<endl;
+                    }
+                    
+                }
+                    
+            }
+        }
+        getline(cin, parse);
     }
-    
+
     return 0;
-        
 }
