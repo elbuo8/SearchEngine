@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <locale>
 #include <string>
+#include <regex.h>
 
 using namespace std;
 
@@ -57,18 +58,18 @@ int main() {
             for (int j = 0; j < words.size(); j++) {
                 //cout<<words[j]<<endl;
                 
-                //Clean word
+                //Clean words
+                
                 for (int k = 0; k < words[j].length(); k++) {
+                    words[j][k] = tolower(words[j][k], filter);
                     if(!isalpha(words[j][k], filter)) {
-                        if(words[j][k] == '\'' && words[j][k+1] == 's') words[j].erase(k,2);
-                        else {
-                         	words[j].erase(k,1);
-                        }
+                        if(words[j][k] == '\'') words[j].erase(k);
+                        else words[j].erase(k--,1);
                     }
                 }
-
+				
                 //If the word is not in stopwords.txt, add it to the engine
-                if (!binary_search(stopWords.begin(), stopWords.end(), words[j])) {
+                if (!binary_search(stopWords.begin(), stopWords.end(), words[j]) && !words[j].empty()) {
                     //If found, increase counter
                     
                     mapIndex = engine.find(words[j]);
@@ -79,30 +80,27 @@ int main() {
                     //If not found, add the word
                     else {
 
-                        Histogram newHistogram(files[i]);
-                        engine[words[j]] = newHistogram;
+                        //Histogram newHistogram(files[i]);
+                        engine[words[j]] = Histogram(files[i]);
                     }
                 }
             }
         }
     }
     cout<<"Done building search engine."<<endl;
-    
-    for (mapIndex = engine.begin(); mapIndex != engine.end(); mapIndex++) {
-        cout <<mapIndex->first<<" - Word total: " << mapIndex->second.getTotalRepetitions()<<endl;
-    }
-    
+
+
     //Empieza el I/O con el usuario.
     
-    /*
-    cout<<endl<<"Submit your words bro"<<endl;
+    
+    cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
     string parse;
     cin >> parse;
-    while (!parse.empty()) {
+    while (parse != "0") {
+		
 
-        cin >> parse;
     }
-    */
     
+    return 0;
         
 }
