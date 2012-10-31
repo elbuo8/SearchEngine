@@ -1,9 +1,7 @@
 #include "ParsedFile.h"
-#include <map>
 #include <iostream>
 #include <fstream>
 #include <tr1/unordered_map>
-#include "Book.h"
 #include "Histogram.h"
 #include <vector>
 #include <algorithm>
@@ -25,6 +23,7 @@ int main() {
     vector<string> files = vector<string>();
     getdir(dir,files); //Anade los files del directorio al vector
     tr1::unordered_map<string, Histogram> engine;
+    tr1::unordered_map<string, Histogram>::iterator mapIndex;
     
     locale filter;
     
@@ -51,8 +50,6 @@ int main() {
     cout <<endl<<"Start building the search engine."<<endl;
     for (int i = 0; i < files.size(); i++) {
         
-        //cout<<files[i]<<endl<<endl;
-        
         if (files[i].c_str()[0]!='.') { //Trampa de Arce para evitar hidden files
             
             vector<string> words = ParsedFile(dir + files[i]).readAndTokenize(); //Get all words
@@ -63,8 +60,10 @@ int main() {
                 //Clean word
                 for (int k = 0; k < words[j].length(); k++) {
                     if(!isalpha(words[j][k], filter)) {
-                        if(words[j][k] == '\'') words[j].erase(k);
-                        else words[j].erase(k,1);
+                        if(words[j][k] == '\'' && words[j][k+1] == 's') words[j].erase(k,2);
+                        else {
+                         	words[j].erase(k,1);
+                        }
                     }
                 }
 
@@ -72,18 +71,14 @@ int main() {
                 if (!binary_search(stopWords.begin(), stopWords.end(), words[j])) {
                     //If found, increase counter
                     
-                    tr1::unordered_map<string, Histogram>::iterator mapIndex = engine.find(words[j]);
+                    mapIndex = engine.find(words[j]);
                     if (mapIndex != engine.end()) {
-                        
-                        //If findAndAdd book doesn't work, add book.
-                        if (!mapIndex->second.findAndAdd(files[i])) {
-                            
-                            mapIndex->second.addBook(files[i]);
-                        }
+                
+                		engine[words[j]].add(files[i]);
                     }
                     //If not found, add the word
                     else {
-                        
+
                         Histogram newHistogram(files[i]);
                         engine[words[j]] = newHistogram;
                     }
@@ -92,16 +87,22 @@ int main() {
         }
     }
     cout<<"Done building search engine."<<endl;
+    
+    for (mapIndex = engine.begin(); mapIndex != engine.end(); mapIndex++) {
+        cout <<mapIndex->first<<" - Word total: " << mapIndex->second.getTotalRepetitions()<<endl;
+    }
+    
     //Empieza el I/O con el usuario.
     
+    /*
     cout<<endl<<"Submit your words bro"<<endl;
     string parse;
     cin >> parse;
-    while (parse != "") {
+    while (!parse.empty()) {
 
         cin >> parse;
     }
-    
+    */
     
         
 }

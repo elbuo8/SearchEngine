@@ -10,22 +10,20 @@
 #define ____Histogram__
 
 #include <iostream>
-#include <list>
-#include "Book.h"
 #include <string>
+#include <tr1/unordered_map>
 
 using namespace std;
 
 class Histogram {
 private:
     int totalRepetitions;
-    list<Book> books;
+    tr1::unordered_map<string, int> reverseIndex;
     
 public:
-    Histogram(const string& book);
     Histogram();
-    void addBook(const string& book);
-    bool findAndAdd(const string& bookTitle);
+    Histogram(const string& index);
+    void add(const string& bookTitle);
     int getTotalRepetitions() const;
     
 };

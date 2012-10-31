@@ -7,7 +7,6 @@
 //
 
 #include "Histogram.h"
-#include "Book.h"
 #include <string>
 
 using namespace std;
@@ -17,28 +16,15 @@ Histogram::Histogram() {
 }
 
 Histogram::Histogram(const string& book) {
-    totalRepetitions = 0;
-    addBook(book);
+    totalRepetitions = 1;
+    reverseIndex[book] = 1;
 }
 
 int Histogram::getTotalRepetitions() const {
     return totalRepetitions;
 }
 
-void Histogram::addBook(const string& book) {
-    Book newBook(book);
-    books.push_back(newBook);
-    totalRepetitions++;
-}
-
-bool Histogram::findAndAdd(const string& bookTitle) {
-    list<Book>::iterator bookIndex;
-    for (bookIndex = books.begin(); bookIndex != books.end(); bookIndex++) {
-        if (bookIndex->getTitle() == bookTitle) {
-            bookIndex->increase();
-            totalRepetitions++;
-            return true;
-        }
-    }
-    return false;
+void Histogram::add(const string& bookTitle) {
+	totalRepetitions++;
+	reverseIndex[bookTitle] = 1;
 }
