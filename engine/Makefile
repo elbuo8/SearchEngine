@@ -1,8 +1,8 @@
 #Makefile - R Arce
 all: client
 
-client: client.o ParsedFile.o Book.o Histogram.o
-	c++ client.o ParsedFile.o Book.o Histogram.o -o client
+client: client.o ParsedFile.o Book.o Histogram.o Engine.o
+	c++ client.o ParsedFile.o Book.o Histogram.o Engine.o -o client
 
 client.o: client.cpp ParsedFile.h Book.h Histogram.h
 	c++ -c -O3 client.cpp
@@ -15,6 +15,9 @@ Book.o: Book.cpp Book.h
 
 Histogram.o: Histogram.cpp Book.h Histogram.h
 	c++ -c -O3 Histogram.cpp
+
+Engine.o: Engine.cpp Histogram.h
+	c++ -c -O3 Engine.cpp
 
 clean: 
 	rm -rf *.o

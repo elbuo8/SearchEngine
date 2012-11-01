@@ -1,15 +1,14 @@
 #include "ParsedFile.h"
 #include <iostream>
-#include <fstream>
 #include <tr1/unordered_map>
 #include "Histogram.h"
 #include <vector>
 #include <algorithm>
-#include <locale>
 #include <string>
 #include <list>
 #include "Book.h"
 #include "functions.h"
+#include "Engine.h"
 
 using namespace std;
 
@@ -26,10 +25,10 @@ int main() {
     string dir = string("./test/");
     vector<string> files = vector<string>();
     getdir(dir,files); //Anade los files del directorio al vector
-    tr1::unordered_map<string, Histogram> engine;
+    Engine engine;
+    //tr1::unordered_map<string, Histogram> engine;
     tr1::unordered_map<string, Histogram>::iterator mapIndex;
     
-    locale filter;
     
     //Stopwords requirements
     tr1::unordered_map<string, int> stopWords = buildStopWords();
