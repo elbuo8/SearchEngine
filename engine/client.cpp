@@ -26,12 +26,6 @@ int main() {
     vector<string> files = vector<string>();
     getdir(dir,files); //Anade los files del directorio al vector
     Engine engine;
-    //tr1::unordered_map<string, Histogram> engine;
-    tr1::unordered_map<string, Histogram>::iterator mapIndex;
-    
-    
-    //Stopwords requirements
-    tr1::unordered_map<string, int> stopWords = buildStopWords();
     
     //Montar el engine. Contiene un hash table para index las palabras.
     //El key es la palabra, el value es un Histograma que mantiene un LL y
@@ -39,38 +33,17 @@ int main() {
     //apariciones de la palabra.
     cout <<endl<<"Start building the search engine."<<endl;
     for (int i = 0; i < files.size(); i++) {
-        
         if (files[i].c_str()[0]!='.') { //Trampa de Arce para evitar hidden files
-            
             vector<string> words = ParsedFile(dir + files[i]).readAndTokenize(); //Get all words
-            
             for (int j = 0; j < words.size(); j++) {
-                
                 //Clean words
                 sanitize(words[j]);
-                
-                
-                //If the word is not in stopwords.txt, add it to the engine
-                //!binary_search(stopWords.begin(), stopWords.end(), words[j])
-                if (stopWords.find(words[j]) == stopWords.end() && !words[j].empty()) {
-                    //If found, increase counter
-                    
-                    mapIndex = engine.find(words[j]);
-                    if (mapIndex != engine.end()) {
-                
-                		engine[words[j]].add(files[i]);
-                    }
-                    //If not found, add the word
-                    else {
-                        engine[words[j]] = Histogram(files[i]);
-                    }
-                }
+                engine.addToEngine(words[j], files[i]);
             }
         }
     }
     cout<<"Done building search engine."<<endl;
-    
-     
+    /*
     //Empezar un utility file.
     //Empieza el I/O con el usuario.
     cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
@@ -142,6 +115,6 @@ int main() {
         }
         getline(cin, parse);
     }
-    
+    */
     return 0;
 }

@@ -4,7 +4,7 @@ all: client
 client: client.o ParsedFile.o Book.o Histogram.o Engine.o
 	c++ client.o ParsedFile.o Book.o Histogram.o Engine.o -o client
 
-client.o: client.cpp ParsedFile.h Book.h Histogram.h
+client.o: client.cpp ParsedFile.h Book.h Histogram.h functions.h
 	c++ -c -O3 client.cpp
 
 ParsedFile.o: ParsedFile.cpp ParsedFile.h 
