@@ -90,6 +90,7 @@ int main() {
     }
     cout<<"Done building search engine."<<endl;
     
+    //Empezar un utility file.
     //Empieza el I/O con el usuario.
     cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
     string parse;
@@ -145,6 +146,10 @@ int main() {
                             counter++;
                         }
                     }
+                }
+                //No esta en el engine at all.
+                else {
+                    cout<<"Words are not in engine"<<endl;
                 }
             }
         }
