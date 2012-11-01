@@ -10,12 +10,13 @@
 #define _functions_h
 
 #include <locale>
+#include "Engine.h"
 
 using namespace std;
 
 
 //Sanitize words.
-void sanitize(string& word) {
+string sanitize(string& word) {
     locale filter; 
     for (int k = 0; k < word.length(); k++) {
         word[k] = tolower(word[k], filter);
@@ -24,6 +25,14 @@ void sanitize(string& word) {
             else word.erase(k--,1);
         }
     }
+    return word;
+}
+
+vector<string> getSearchableWords(vector<string> words, const Engine& engine) {
+    for (int i = 0; i < words.size(); i++) 
+        if (engine.find(words[i]) == engine.end()) 
+            words.erase(words.begin() + i--);
+    return words;
 }
 
 

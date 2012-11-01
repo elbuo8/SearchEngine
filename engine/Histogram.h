@@ -26,12 +26,13 @@ public:
     Histogram();
     Histogram(const string& index);
     void add(const string& bookTitle);
+    void add(const string& bookTitle, const int& total);
     int getTotalRepetitions() const;
-    tr1::unordered_map<string, int> getHistogram() const;
+    tr1::unordered_map<string, int> getReverseIndex() const;
     list<Book> toList();
     
 };
 
-list<Book> getIntersection(tr1::unordered_map<string, int> histogram1, tr1::unordered_map<string, int> histogram2);
+Histogram getIntersection(tr1::unordered_map<string, int> histogram1, tr1::unordered_map<string, int> histogram2);
 
 #endif /* defined(____Histogram__) */

@@ -22,7 +22,7 @@ Histogram::Histogram(const string& book) {
     reverseIndex[book] = 1;
 }
 
-tr1::unordered_map<string, int> Histogram::getHistogram() const {
+tr1::unordered_map<string, int> Histogram::getReverseIndex() const {
     return reverseIndex;
 }
 
@@ -35,22 +35,24 @@ void Histogram::add(const string& bookTitle) {
 	reverseIndex[bookTitle] += 1;
 }
 
-list<Book> getIntersection(tr1::unordered_map<string, int> histogram1, tr1::unordered_map<string, int> histogram2) {
-    list<Book> intersection;
+void Histogram::add(const string& bookTitle, const int& total) {
+	totalRepetitions += total;
+	reverseIndex[bookTitle] = total;
+}
+
+Histogram getIntersection(tr1::unordered_map<string, int> histogram1, tr1::unordered_map<string, int> histogram2) {
+    Histogram intersection;
     tr1::unordered_map<string, int>::iterator mapIndex;
-    for (mapIndex = histogram1.begin(); mapIndex != histogram1.end(); mapIndex++) {
-        if(histogram2.find(mapIndex->first) != histogram2.end()) {
-            intersection.push_back(Book(mapIndex->first, mapIndex->second + histogram2[mapIndex->first]));
-        }
-    }
+    for (mapIndex = histogram1.begin(); mapIndex != histogram1.end(); mapIndex++) 
+        if(histogram2.find(mapIndex->first) != histogram2.end()) 
+            intersection.add(mapIndex->first, mapIndex->second + histogram2[mapIndex->first]);
     return intersection;
-    
 }
 
 list<Book> Histogram::toList() {
     list<Book> books;
-    for (tr1::unordered_map<string, int>::iterator mapIndex = reverseIndex.begin(); mapIndex != reverseIndex.end(); mapIndex++) {
+    for (tr1::unordered_map<string, int>::iterator mapIndex = reverseIndex.begin(); mapIndex != reverseIndex.end(); mapIndex++) 
         books.push_back(Book(mapIndex->first, mapIndex->second));
-    }
+    books.sort(bookSort);
     return books;
 }
