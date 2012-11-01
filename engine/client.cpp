@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <locale>
 #include <string>
-#include <regex.h>
 #include <list>
 #include "Book.h"
 
@@ -32,7 +31,7 @@ int main() {
     locale filter;
     
     //Stopwords requirements
-	vector<string> stopWords;//Lista esta sorted, so binary search for the win.
+    tr1::unordered_map<string, int> stopWords;//Lista esta sorted, so binary search for the win.
     ifstream stopFile("../stopwords.txt");
     
     
@@ -40,7 +39,7 @@ int main() {
     do {
         string parse;
         stopFile >> parse;
-        stopWords.push_back(parse);
+        stopWords[parse] = 1;
     } while (!stopFile.eof());
 
     stopFile.close();
@@ -72,7 +71,8 @@ int main() {
                 }
 				
                 //If the word is not in stopwords.txt, add it to the engine
-                if (!binary_search(stopWords.begin(), stopWords.end(), words[j]) && !words[j].empty()) {
+                //!binary_search(stopWords.begin(), stopWords.end(), words[j])
+                if (stopWords.find(words[j]) == stopWords.end() && !words[j].empty()) {
                     //If found, increase counter
                     
                     mapIndex = engine.find(words[j]);
@@ -90,6 +90,7 @@ int main() {
     }
     cout<<"Done building search engine."<<endl;
     
+     
     //Empezar un utility file.
     //Empieza el I/O con el usuario.
     cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
@@ -112,7 +113,7 @@ int main() {
 					for (list<Book>::iterator bookIndex = intersection.begin(); bookIndex != intersection.end(); bookIndex++) {
                         if(counter == 3)
                             break;
-                        cout<<bookIndex->getTitle()<< ":"<<bookIndex->getRepetitions()<<endl;
+                        cout<<bookIndex->getTitle()<<endl;
                         counter++;
                     }
                     if(counter < 3)
@@ -132,6 +133,9 @@ int main() {
                             cout<<bookIndex->getTitle()<<endl;
                             counter++;
                         }
+                        if (counter < 3) {
+                            cout<<"Not enough sources"<<endl;
+                        }
                     }
                     //One doesn't have it.
                     else {
@@ -145,6 +149,9 @@ int main() {
                             cout<<bookIndex->getTitle()<<endl;
                             counter++;
                         }
+                        if (counter < 3 ) {
+                            cout<<"Not enough sources"<<endl;
+                        }
                     }
                 }
                 //No esta en el engine at all.
@@ -155,5 +162,6 @@ int main() {
         }
         getline(cin, parse);
     }
+    
     return 0;
 }
