@@ -23,7 +23,7 @@ using namespace std;
 int main() {
     
     //Engine requirements
-    string dir = string("./test/");
+    string dir = string("./moviesdb/");
     vector<string> files = vector<string>();
     getdir(dir,files); //Anade los files del directorio al vector
     tr1::unordered_map<string, Histogram> engine;
@@ -91,7 +91,6 @@ int main() {
     cout<<"Done building search engine."<<endl;
     
     //Empieza el I/O con el usuario.
-    
     cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
     string parse;
     getline(cin, parse);
@@ -110,9 +109,9 @@ int main() {
                     
                     int counter = 0;
 					for (list<Book>::iterator bookIndex = intersection.begin(); bookIndex != intersection.end(); bookIndex++) {
-                        if(counter > 3)
+                        if(counter == 3)
                             break;
-                        cout<<bookIndex->getTitle()<<endl;
+                        cout<<bookIndex->getTitle()<< ":"<<bookIndex->getRepetitions()<<endl;
                         counter++;
                     }
                     if(counter < 3)
@@ -127,7 +126,7 @@ int main() {
                         
                         int counter = 0;
                         for (list<Book>::iterator bookIndex = matches.begin(); bookIndex != matches.end(); bookIndex++) {
-                            if(counter > 3)
+                            if(counter == 3)
                                 break;
                             cout<<bookIndex->getTitle()<<endl;
                             counter++;
@@ -140,18 +139,16 @@ int main() {
                         
                         int counter = 0;
                         for (list<Book>::iterator bookIndex = matches.begin(); bookIndex != matches.end(); bookIndex++) {
-                            if(counter > 3)
+                            if(counter == 3)
                                 break;
                             cout<<bookIndex->getTitle()<<endl;
                             counter++;
                         }
                     }
                 }
-                    
             }
         }
         getline(cin, parse);
     }
-
     return 0;
 }
