@@ -28,6 +28,7 @@ public:
     void add(const string& bookTitle);
     int getTotalRepetitions() const;
     tr1::unordered_map<string, int> getHistogram() const;
+    list<Book> toList();
     
 };
 

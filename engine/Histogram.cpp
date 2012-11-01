@@ -46,3 +46,11 @@ list<Book> getIntersection(tr1::unordered_map<string, int> histogram1, tr1::unor
     return intersection;
     
 }
+
+list<Book> Histogram::toList() {
+    list<Book> books;
+    for (tr1::unordered_map<string, int>::iterator mapIndex = reverseIndex.begin(); mapIndex != reverseIndex.end(); mapIndex++) {
+        books.push_back(Book(mapIndex->first, mapIndex->second));
+    }
+    return books;
+}

@@ -21,6 +21,7 @@ using namespace std;
 */
 
 int main() {
+    
     //Engine requirements
     string dir = string("./test/");
     vector<string> files = vector<string>();
@@ -94,6 +95,7 @@ int main() {
     cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
     string parse;
     getline(cin, parse);
+    
     while (parse != "0") {
         vector<string> words = tokenize(parse, " "); //Recycle bro.
 		if(words.size() == 0 || words.size() > 2) {
@@ -101,14 +103,49 @@ int main() {
         }
         else {
             if (words.size() == 2) {
+                //Caso en que ambas palabras no son iguales y estan en el engine.
 				if(engine.find(words[0]) != engine.end() && engine.find(words[1]) != engine.end() && words[0] != words[1]) {
                     list<Book> intersection = getIntersection(engine[words[0]].getHistogram(), engine[words[1]].getHistogram());
                     intersection.sort(bookSort);
                     
+                    int counter = 0;
 					for (list<Book>::iterator bookIndex = intersection.begin(); bookIndex != intersection.end(); bookIndex++) {
+                        if(counter > 3)
+                            break;
                         cout<<bookIndex->getTitle()<<endl;
+                        counter++;
                     }
-                    
+                    if(counter < 3)
+                        cout <<"Not enough common files"<<endl;
+                }
+                //Caso en que son iguales o una no esta en el engine.
+                else if((words[0] == words[1]) || (engine.find(words[0]) == engine.end() && engine.find(words[1]) != engine.end()) || (engine.find(words[1]) == engine.end() && engine.find(words[0]) != engine.end())) {
+                    //Son iguales.
+                    if(words[0] == words[1]) {
+                        list<Book> matches = engine[words[0]].toList();
+                        matches.sort(bookSort);
+                        
+                        int counter = 0;
+                        for (list<Book>::iterator bookIndex = matches.begin(); bookIndex != matches.end(); bookIndex++) {
+                            if(counter > 3)
+                                break;
+                            cout<<bookIndex->getTitle()<<endl;
+                            counter++;
+                        }
+                    }
+                    //One doesn't have it.
+                    else {
+                        list<Book> matches = (engine.find(words[0]) == engine.end())?engine[words[1]].toList(): engine[words[0]].toList();
+                        matches.sort(bookSort);
+                        
+                        int counter = 0;
+                        for (list<Book>::iterator bookIndex = matches.begin(); bookIndex != matches.end(); bookIndex++) {
+                            if(counter > 3)
+                                break;
+                            cout<<bookIndex->getTitle()<<endl;
+                            counter++;
+                        }
+                    }
                 }
                     
             }
