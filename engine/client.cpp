@@ -9,6 +9,7 @@
 #include <string>
 #include <list>
 #include "Book.h"
+#include "functions.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ using namespace std;
 int main() {
     
     //Engine requirements
-    string dir = string("./moviesdb/");
+    string dir = string("./test/");
     vector<string> files = vector<string>();
     getdir(dir,files); //Anade los files del directorio al vector
     tr1::unordered_map<string, Histogram> engine;
@@ -31,20 +32,7 @@ int main() {
     locale filter;
     
     //Stopwords requirements
-    tr1::unordered_map<string, int> stopWords;//Lista esta sorted, so binary search for the win.
-    ifstream stopFile("../stopwords.txt");
-    
-    
-    cout << "Building the stopwatch list."<<endl;
-    do {
-        string parse;
-        stopFile >> parse;
-        stopWords[parse] = 1;
-    } while (!stopFile.eof());
-
-    stopFile.close();
-
-    cout << "Done building the stopwatch list."<<endl;
+    tr1::unordered_map<string, int> stopWords = buildStopWords();
     
     //Montar el engine. Contiene un hash table para index las palabras.
     //El key es la palabra, el value es un Histograma que mantiene un LL y
@@ -58,18 +46,11 @@ int main() {
             vector<string> words = ParsedFile(dir + files[i]).readAndTokenize(); //Get all words
             
             for (int j = 0; j < words.size(); j++) {
-                //cout<<words[j]<<endl;
                 
                 //Clean words
+                sanitize(words[j]);
                 
-                for (int k = 0; k < words[j].length(); k++) {
-                    words[j][k] = tolower(words[j][k], filter);
-                    if(!isalpha(words[j][k], filter)) {
-                        if(words[j][k] == '\'') words[j].erase(k);
-                        else words[j].erase(k--,1);
-                    }
-                }
-				
+                
                 //If the word is not in stopwords.txt, add it to the engine
                 //!binary_search(stopWords.begin(), stopWords.end(), words[j])
                 if (stopWords.find(words[j]) == stopWords.end() && !words[j].empty()) {
