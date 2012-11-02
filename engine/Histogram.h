@@ -35,4 +35,7 @@ public:
 
 Histogram getIntersection(tr1::unordered_map<string, int> histogram1, tr1::unordered_map<string, int> histogram2);
 
+
+Histogram getUnion(tr1::unordered_map<string, int> histogram1, tr1::unordered_map<string, int> histogram2);
+
 #endif /* defined(____Histogram__) */

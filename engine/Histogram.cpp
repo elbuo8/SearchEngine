@@ -56,3 +56,14 @@ list<Book> Histogram::toList() {
     books.sort(bookSort);
     return books;
 }
+
+Histogram getUnion(tr1::unordered_map<string, int> histogram1, tr1::unordered_map<string, int> histogram2) {
+    Histogram histogram;
+    for (tr1::unordered_map<string, int>::iterator index = histogram1.begin(); index != histogram1.end(); index++)
+        histogram.add(index->first, index->second);
+    
+    for (tr1::unordered_map<string, int>::iterator index = histogram2.begin(); index != histogram2.end(); index++)
+        histogram.add(index->first, index->second);
+    
+    return histogram;
+}

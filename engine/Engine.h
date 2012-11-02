@@ -28,5 +28,6 @@ public:
     
 };
 
+Engine merge(Engine& engine1, Engine& engine2);
 
 #endif /* defined(____Engine__) */

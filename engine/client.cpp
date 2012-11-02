@@ -12,43 +12,49 @@
 
 using namespace std;
 
+/*
+ This is the runner for the Search Engine.
+*/
+
 
 int main() {
     
-    //Engine requirements
-    string dir = string("../moviesdb/");
+    //Engine requirements initializations.
+    string dir = string("../moviesdb/"); //Literal location of files.
     vector<string> files = vector<string>();
-    getdir(dir,files); //Anade los files del directorio al vector
+    getdir(dir,files); //Get files from directory and add them to vector.
     Engine engine;
     
-    cout <<endl<<"Start building the search engine."<<endl;
+    cout <<endl<<"Starting to build the search engine."<<endl;
     for (int i = 0; i < files.size(); i++) {
-        if (files[i].c_str()[0]!='.') { //Trampa de Arce para evitar hidden files
+        if (files[i].c_str()[0]!='.') { //Avoid hidden files.
             vector<string> words = ParsedFile(dir + files[i]).readAndTokenize(); //Get all words
             for (int j = 0; j < words.size(); j++) 
-                engine.addToEngine(sanitize(words[j]), files[i]);
+                engine.addToEngine(sanitize(words[j]), files[i]); //Sanitize removes capital letters, an non alpha chars
         }
     }
-    cout<<"Done building search engine."<<endl;
-    files.clear();
+    cout<<"Done building the search engine."<<endl;
+    files.clear(); //Clean up
     
-    cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
+    //I/O with the user.
     string parse;
-    getline(cin, parse);
-    while (parse != "0") {
-        vector<string> words = getSearchableWords(tokenize(parse, " "), engine); //Recycle bro.
+    do {
+        cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
+        getline(cin, parse);
+        if(parse == "0") break;
+        vector<string> words = getSearchableWords(tokenize(parse, " "), engine); //Tokenize returns vector of words, then remove those that are not in engine.
         cout<<"Results for your search:"<<endl;
         int counter = 0;
         if (words.size() > 0) {
-        	list<Book> topHits = engine.search(words);
+        	list<Book> topHits = engine.search(words); //Get a sorted intersection of all searchable words.
             for (list<Book>::iterator index = topHits.begin(); index != topHits.end(); index++) {
                 cout<<++counter << ". "<< index->getTitle()<<endl;
-                if (counter > 3) break;
+                if (counter == 3) break;
             }
+            cout<<endl;
         }
-        if(counter < 3) cout<<"What a shame we don't have enough sources"<<endl;
-        getline(cin, parse);
-    }
-    
+        if(counter < 3) cout<<"What a shame we don't have enough sources!"<<endl;
+    } while (true);
+
     return 0;
 }

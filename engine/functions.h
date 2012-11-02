@@ -11,6 +11,8 @@
 
 #include <locale>
 #include "Engine.h"
+#include <vector>
+#include <pthread.h>
 
 using namespace std;
 
@@ -35,6 +37,32 @@ vector<string> getSearchableWords(vector<string> words, const Engine& engine) {
     return words;
 }
 
+struct HalfEngine {
+    vector<string> files;
+    string dir;
+    int start;
+    int finish;
+    Engine engine;
+};
+
+
+void *halfEgineBuilder(void *values) {
+    struct HalfEngine *data = (struct HalfEngine *) values;
+    
+    for (int i = data->start; i < data->finish; i++) {
+        if (data->files[i].c_str()[0]!='.') { //Avoid hidden files.
+            vector<string> words = ParsedFile(data->dir + data->files[i]).readAndTokenize(); //Get all words
+            for (int j = 0; j < words.size(); j++)
+                data->engine.addToEngine(sanitize(words[j]), data->files[i]); //Sanitize removes capital letters, an non alpha chars
+        }
+    }
+    pthread_exit((void *) data);
+}
+/*
+Engine buildEngine(string& dir, vector<string> files) {
+    
+}
+*/
 
 
 #endif
