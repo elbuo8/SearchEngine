@@ -9,6 +9,7 @@
 #include "Book.h"
 #include "functions.h"
 #include "Engine.h"
+#include <ctime>
 
 using namespace std;
 
@@ -19,6 +20,8 @@ using namespace std;
 
 int main() {
     
+    time_t start, end;
+    
     //Engine requirements initializations.
     string dir = string("../moviesdb/"); //Literal location of files.
     vector<string> files = vector<string>();
@@ -26,7 +29,7 @@ int main() {
     Engine engine;
         
     cout <<endl<<"Starting to build the search engine."<<endl;
-    
+    time (&start);
     for (int i = 0; i < files.size(); i++) {
         if (files[i].c_str()[0]!='.') { //Avoid hidden files.
             vector<string> words = ParsedFile(dir + files[i]).readAndTokenize(); //Get all words
@@ -34,31 +37,32 @@ int main() {
                 engine.addToEngine(sanitize(words[j]), files[i]); //Sanitize removes capital letters, an non alpha chars
         }
     }
-    
-    //engine = buildEngine(dir, files);
-    cout<<"Done building the search engine."<<endl;
+    //engine = buildEngine(dir, files); Si fuera paralelo.
+    time (&end);
+    cout<<"Done building the search engine. It took: "<< difftime(end,start) << "seconds"<<endl;
     files.clear(); //Clean up
-    
     //I/O with the user.
-    /*
     string parse;
     do {
         cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
         getline(cin, parse);
+        time (&start);
         if(parse == "0") break;
         vector<string> words = getSearchableWords(tokenize(parse, " "), engine); //Tokenize returns vector of words, then remove those that are not in engine.
-        cout<<"Results for your search:"<<endl;
+        cout<<endl<<"Results for your search:"<<endl;
         int counter = 0;
         if (words.size() > 0) {
         	list<Book> topHits = engine.search(words); //Get a sorted intersection of all searchable words.
+            time(&end);
             for (list<Book>::iterator index = topHits.begin(); index != topHits.end(); index++) {
                 cout<<++counter << ". "<< index->getTitle()<<endl;
                 if (counter == 3) break;
             }
             cout<<endl;
         }
+        cout<<"Search took: " << difftime(end,start) << "seconds."<<endl;
         if(counter < 3) cout<<"What a shame we don't have enough sources!"<<endl;
     } while (true);
-    */
+    
     return 0;
 }
