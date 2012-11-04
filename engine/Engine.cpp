@@ -40,7 +40,7 @@ list<Book> Engine::search(const vector<string>& words) {
 tr1::unordered_map<string, int> Engine::buildStopWords() {
     ifstream stopFile("../stopwords.txt");
     tr1::unordered_map<string, int> stopWords;
-    cout << "Building the stopwatch list."<<endl;
+    //cout << "Building the stopwatch list."<<endl;
     do {
         string parse;
         stopFile >> parse;
@@ -49,20 +49,23 @@ tr1::unordered_map<string, int> Engine::buildStopWords() {
     
     stopFile.close();
     
-    cout << "Done building the stopwatch list."<<endl;
+    //cout << "Done building the stopwatch list."<<endl;
     return stopWords;
 }
 
 Engine merge(Engine& engine1, Engine& engine2) {
     Engine engine;
-	for (Engine::iterator index = engine1.begin(); index != engine1.end(); index++) {
-        if(engine2.find(index->first) != engine2.end()) {
+	for (Engine::iterator index = engine1.begin(); index != engine1.end(); index++) 
+        if(engine2.find(index->first) != engine2.end()) 
             engine.insert(pair<string, Histogram>(index->first, getUnion(index->second.getReverseIndex(), engine2.find(index->first)->second.getReverseIndex())));
-            engine1.erase(index->first);
-            engine2.erase(index->first);
-        }
+    
+    for(Engine::iterator index = engine.begin(); index != engine.end(); index++) {
+        engine1.erase(index->first);
+        engine2.erase(index->first);        
     }
+
     engine.insert(engine1.begin(), engine1.end());
     engine.insert(engine2.begin(), engine2.end());
+    
     return engine;
 }

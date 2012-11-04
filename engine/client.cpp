@@ -24,8 +24,9 @@ int main() {
     vector<string> files = vector<string>();
     getdir(dir,files); //Get files from directory and add them to vector.
     Engine engine;
-    
+        
     cout <<endl<<"Starting to build the search engine."<<endl;
+    
     for (int i = 0; i < files.size(); i++) {
         if (files[i].c_str()[0]!='.') { //Avoid hidden files.
             vector<string> words = ParsedFile(dir + files[i]).readAndTokenize(); //Get all words
@@ -33,10 +34,13 @@ int main() {
                 engine.addToEngine(sanitize(words[j]), files[i]); //Sanitize removes capital letters, an non alpha chars
         }
     }
+    
+    //engine = buildEngine(dir, files);
     cout<<"Done building the search engine."<<endl;
     files.clear(); //Clean up
     
     //I/O with the user.
+    /*
     string parse;
     do {
         cout<<endl<<"Submit your words bro! Enter 0 when done."<<endl;
@@ -55,6 +59,6 @@ int main() {
         }
         if(counter < 3) cout<<"What a shame we don't have enough sources!"<<endl;
     } while (true);
-
+    */
     return 0;
 }

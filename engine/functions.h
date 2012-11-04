@@ -13,6 +13,8 @@
 #include "Engine.h"
 #include <vector>
 #include <pthread.h>
+#include <tr1/unordered_map>
+#include "Histogram.h"
 
 using namespace std;
 
@@ -58,11 +60,32 @@ void *halfEgineBuilder(void *values) {
     }
     pthread_exit((void *) data);
 }
-/*
-Engine buildEngine(string& dir, vector<string> files) {
-    
-}
-*/
 
+Engine buildEngine(string& dir, vector<string> files) {
+    struct HalfEngine engine1;
+    struct HalfEngine engine2;
+    
+    pthread_t thread1;
+    pthread_t thread2;
+    void *status;
+
+    engine1.files = files;
+    engine2.files = files;
+    
+    engine1.dir = dir;
+    engine2.dir = dir;
+    
+    engine1.start = 0;
+    engine1.finish = files.size()/2;
+    
+    engine2.start = files.size()/2;
+    engine2.finish = files.size();
+    
+    int thread1Status = pthread_create(&thread1, NULL, halfEgineBuilder, (void *) &engine1);
+    int thread2Status = pthread_create(&thread2, NULL, halfEgineBuilder, (void *) &engine2);
+    thread1Status = pthread_join(thread1, &status);
+    thread2Status = pthread_join(thread2, &status);    
+    return merge(engine1.engine, engine2.engine);
+}
 
 #endif
