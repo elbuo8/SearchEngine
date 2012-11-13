@@ -15,9 +15,11 @@
 #include <pthread.h>
 #include <tr1/unordered_map>
 #include "Histogram.h"
+#include <ctime>
 
 using namespace std;
 
+time_t start, end;
 
 //Sanitize words.
 string sanitize(string& word) {
@@ -81,10 +83,13 @@ Engine buildEngine(string& dir, vector<string> files) {
     engine2.start = files.size()/2;
     engine2.finish = files.size();
     
+    time (&start);
     int thread1Status = pthread_create(&thread1, NULL, halfEgineBuilder, (void *) &engine1);
     int thread2Status = pthread_create(&thread2, NULL, halfEgineBuilder, (void *) &engine2);
     thread1Status = pthread_join(thread1, &status);
-    thread2Status = pthread_join(thread2, &status);    
+    thread2Status = pthread_join(thread2, &status);  
+    time (&end);
+    cout<<"Tiempo de threads" << difftime(end,start)<<endl; 
     return merge(engine1.engine, engine2.engine);
 }
 

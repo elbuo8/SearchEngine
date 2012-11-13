@@ -30,6 +30,7 @@ int main() {
         
     cout <<endl<<"Starting to build the search engine."<<endl;
     time (&start);
+    
     for (int i = 0; i < files.size(); i++) {
         if (files[i].c_str()[0]!='.') { //Avoid hidden files.
             vector<string> words = ParsedFile(dir + files[i]).readAndTokenize(); //Get all words
@@ -37,7 +38,8 @@ int main() {
                 engine.addToEngine(sanitize(words[j]), files[i]); //Sanitize removes capital letters, an non alpha chars
         }
     }
-    //engine = buildEngine(dir, files); Si fuera paralelo.
+    
+    //engine = buildEngine(dir, files); //Si fuera paralelo.
     time (&end);
     cout<<"Done building the search engine. It took: "<< difftime(end,start) << "seconds"<<endl;
     files.clear(); //Clean up
@@ -55,8 +57,8 @@ int main() {
         	list<Book> topHits = engine.search(words); //Get a sorted intersection of all searchable words.
             time(&end);
             for (list<Book>::iterator index = topHits.begin(); index != topHits.end(); index++) {
-                cout<<++counter << ". "<< index->getTitle()<<endl;
-                if (counter == 3) break;
+                cout<<++counter << ". "<< index->getTitle() << " - " << index->getRepetitions()<<endl;
+                //if (counter == 3) break;
             }
             cout<<endl;
         }
